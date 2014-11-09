@@ -1,0 +1,8 @@
+
+# Vim temporary files
+*~
+*.swp
+
+# cabal dist folder
+dist/
+
