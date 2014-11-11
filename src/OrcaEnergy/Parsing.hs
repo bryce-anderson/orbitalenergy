@@ -55,5 +55,5 @@ takeOrbs homom cnt orbs = take cnt $ drop (occ - homom) orbs
   where
     occ = length $ takeWhile pred orbs
     pred (Orbital _ Empty _) = False
-    pred _                 = True
+    pred _                   = True
 

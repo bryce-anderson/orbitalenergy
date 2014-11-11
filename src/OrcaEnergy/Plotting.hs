@@ -1,19 +1,13 @@
 {-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
-{-# LANGUAGE StandaloneDeriving         #-}
-{-# LANGUAGE TypeFamilies               #-}
-{-# LANGUAGE TypeOperators              #-}
 {-# LANGUAGE UndecidableInstances       #-}
-{-# LANGUAGE ViewPatterns               #-}
 {-# LANGUAGE NoMonomorphismRestriction  #-}
 
 module OrcaEnergy.Plotting (
     alpha,
     beta,
-    alphaBeta
+    alphaBeta,
+    emptyLevel 
 ) where 
 
 import Diagrams.Coordinates
@@ -34,7 +28,10 @@ alphaBeta = eLevel <> a # lc red <> b # lc blue
     a = eArrow # translate (r2 (-0.1,0))
     b = a # rotate (1/2 @@ turn)
 
-eLevel = (strokeLine eLine) # translate (r2 (-0.5,0.0))
+emptyLevel :: Renderable (Path R2) b => Diagram b R2
+emptyLevel = eLevel
+
+eLevel = (strokeLine eLine) # lw thick # translate (r2 (-0.5,0.0))
   where
     eLine = lineFromVertices [ p2 (0,0), p2 (1,0)]
 

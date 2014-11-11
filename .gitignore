@@ -6,3 +6,7 @@
 # cabal dist folder
 dist/
 
+# Sandbox stuff
+.cabal-sandbox/
+cabal.sandbox.config
+
