@@ -2,6 +2,7 @@
 # Vim temporary files
 *~
 *.swp
+*.svg 
 
 # cabal dist folder
 dist/
