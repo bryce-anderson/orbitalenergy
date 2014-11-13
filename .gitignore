@@ -3,6 +3,7 @@
 *~
 *.swp
 *.svg 
+*.out
 
 # cabal dist folder
 dist/
