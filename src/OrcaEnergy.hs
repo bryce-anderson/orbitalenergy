@@ -61,7 +61,7 @@ plotOrb o = p (occupancy o, spin o)
               _          -> t' # translate (r2 (xshiftpos, yshiftpos))
 
 plotOrbs :: (Backend b R2, Renderable (Path R2) b, Renderable Text b) => [Orbital] -> Diagram b R2
-plotOrbs os = strutY 0.3 === foldl1 atop ds
+plotOrbs os = foldl1 atop ds
   where
     c = length os
     (b,t) = erange os
