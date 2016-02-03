@@ -14,12 +14,12 @@ loadEnergies :: FilePath -> IO [Orbital]
 loadEnergies p = getOccupancy . lines <$> readFile p
 
 getOccupancy :: [String] -> [Orbital]
-getOccupancy ls = if null rst'' then alphaOrbs ++ betaOrbs 
+getOccupancy ls = if null rst'' then sort (alphaOrbs ++ betaOrbs)
                   else trace "recursing" $ getOccupancy rst'' 
   where
     ls' = drop 1 $ dropWhile (not . isPrefixOf " The electronic state is") ls
     (alphals,rst) = break (not . isPrefixOf " Alpha") ls'
-    (betals,rst') = break (isPrefixOf "  Beta") rst
+    (betals,rst') = break (not . isPrefixOf "  Beta") rst
     -- look for the last set of energies defined
     rst'' = dropWhile (not . isPrefixOf " The electronic state is") rst'
   
