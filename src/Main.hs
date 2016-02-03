@@ -54,15 +54,9 @@ parseArgs = do
 main :: IO ()
 main = do
   flags <- parseArgs
-  fnames <- case files flags of
-              [] -> findFiles
-              fs -> return fs 
-  putStrLn $ "Attempting to plot orbitals of files " ++ show fnames
-  runPlots $ flags { files = fnames }
+  putStrLn $ "Attempting to plot orbitals of files " ++ show (files flags)
+  runPlots flags
   putStrLn "Done."
-
-findFiles :: IO [FilePath]
-findFiles =  filter (endswith ".out") `fmap` getDirectoryContents "."
 
 outFile = "energylevels.svg"
 
