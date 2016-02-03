@@ -63,7 +63,7 @@ runPlots (OptFlags f t fnames parser) = do
   orbs <- (\fp -> loadOrbs f t fp <$> parser fp) `mapM` fnames
   let maxWidth = (maximum $ width `map` orbs) :: Double
       total = foldl (\acc d -> acc ||| (d `atop` strutX maxWidth)) mempty orbs
-      sz = mkHeight 1024 -- just hardcode a default value: its SVG anyway
+      sz = mkHeight 200 -- just hardcode a default value: its SVG anyway
       
   putStrLn $ "Rendering to SVG " ++ show outFile
   renderSVG outFile sz total

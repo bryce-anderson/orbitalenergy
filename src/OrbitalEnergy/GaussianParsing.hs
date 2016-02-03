@@ -13,9 +13,11 @@ import Control.Applicative
 loadEnergies :: FilePath -> IO [Orbital]
 loadEnergies p = getOccupancy . lines <$> readFile p
 
+hartree = 27.21138602 -- eV/Eh
+
 getOccupancy :: [String] -> [Orbital]
 getOccupancy ls = if null rst'' then sort (alphaOrbs ++ betaOrbs)
-                  else trace "recursing" $ getOccupancy rst'' 
+                  else getOccupancy rst'' 
   where
     ls' = drop 1 $ dropWhile (not . isPrefixOf " The electronic state is") ls
     (alphals,rst) = break (not . isPrefixOf " Alpha") ls'
@@ -32,10 +34,12 @@ parseLine isRhf l = go (words header) where
   (header,energies) = splitAt 24 l :: (String,String)
   engs = take10 $ drop 4 energies
   
-  go ["Alpha","occ.","eigenvalues"]  = (mkOrb alpha Occupied . read) <$> engs
-  go ["Alpha","virt.","eigenvalues"] = (mkOrb alpha EmptyOrb . read) <$> engs
-  go ["Beta","occ.","eigenvalues"]   = (mkOrb beta Occupied . read)  <$> engs
-  go ["Beta","virt.","eigenvalues"]  = (mkOrb beta EmptyOrb . read)  <$> engs
+  go ["Alpha","occ.","eigenvalues"]  = (mkOrb alpha Occupied . parse) <$> engs
+  go ["Alpha","virt.","eigenvalues"] = (mkOrb alpha EmptyOrb . parse) <$> engs
+  go ["Beta","occ.","eigenvalues"]   = (mkOrb beta Occupied . parse)  <$> engs
+  go ["Beta","virt.","eigenvalues"]  = (mkOrb beta EmptyOrb . parse)  <$> engs
+  
+  parse = (* hartree) . read
   
   take10 [] = []
   take10 l = h:rs where

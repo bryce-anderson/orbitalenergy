@@ -15,23 +15,24 @@ import Diagrams.Prelude
 import Diagrams.Util
 
 
+dashed = eLevel # dashingG [0.02,0.02] 0
 
 -- alpha :: Renderable (Path V2 Double) b => Diagram R2
-alpha = eLevel <> eArrow # lc red
+alpha = eLevel -- <> eArrow # lc red
 
 -- beta :: Renderable (Path R2) b => Diagram b R2
-beta = eLevel <> eArrow # rotate (1/2 @@ turn) # lc blue
+beta = eLevel -- <> eArrow # rotate (1/2 @@ turn) # lc blue
 
 -- alphaBeta :: Renderable (Path R2) b => Diagram b R2
-alphaBeta = eLevel <> a # lc red <> b # lc blue
+alphaBeta = eLevel -- <> a # lc red <> b # lc blue
   where
     a = eArrow # translate (r2 (-0.1,0))
     b = a # rotate (1/2 @@ turn)
 
 -- emptyLevel :: Renderable (Path R2) b => Diagram b R2
-emptyLevel = eLevel
+emptyLevel = dashed -- eLevel
 
-eLevel = (strokeLine eLine) # lw thick # translate (r2 (-0.5,0.0))
+eLevel = (strokeLine eLine) # lw thin # translate (r2 (-0.5,0.0))
   where
     eLine = lineFromVertices [ p2 (0,0), p2 (1,0)]
 
