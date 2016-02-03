@@ -16,19 +16,19 @@ import Diagrams.Util
 
 
 
-alpha :: Renderable (Path R2) b => Diagram b R2
+-- alpha :: Renderable (Path V2 Double) b => Diagram R2
 alpha = eLevel <> eArrow # lc red
 
-beta :: Renderable (Path R2) b => Diagram b R2
+-- beta :: Renderable (Path R2) b => Diagram b R2
 beta = eLevel <> eArrow # rotate (1/2 @@ turn) # lc blue
 
-alphaBeta :: Renderable (Path R2) b => Diagram b R2
+-- alphaBeta :: Renderable (Path R2) b => Diagram b R2
 alphaBeta = eLevel <> a # lc red <> b # lc blue
   where
     a = eArrow # translate (r2 (-0.1,0))
     b = a # rotate (1/2 @@ turn)
 
-emptyLevel :: Renderable (Path R2) b => Diagram b R2
+-- emptyLevel :: Renderable (Path R2) b => Diagram b R2
 emptyLevel = eLevel
 
 eLevel = (strokeLine eLine) # lw thick # translate (r2 (-0.5,0.0))

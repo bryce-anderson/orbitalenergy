@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
 
 module OrcaEnergy (
     Spin(..),
@@ -11,7 +12,7 @@ import Text.Printf
 
 import Diagrams.Core.Types (Renderable, Diagram)
 import Diagrams.TwoD.Text 
-import Diagrams.TwoD.Types (R2)
+import Diagrams.TwoD.Types (V2)
 import Diagrams.Path (Path)
 import Diagrams.Prelude
 
@@ -23,7 +24,7 @@ data Spin = Alpha
      deriving (Eq, Show)
 
 data OrbOcc = Occupied
-            | Empty
+            | EmptyOrb
      deriving (Eq, Show)
 
 data Orbital = Orbital { energy    :: Double
@@ -39,28 +40,31 @@ instance Ord Orbital where
 alphaBetaSpacing = 0.6
 vSpacingFactor = 25.0
 
-plotOrb :: (Backend b R2, Renderable (Path R2) b, Renderable Text b) => Orbital -> Diagram b R2
+
+-- (Renderable (Path V2 Double) b, Renderable (Text Double) b) => Orbital -> Diagram b R2
+plotOrb :: (Renderable (Path V2 Double) b, Renderable (Text Double) b) => Orbital -> QDiagram b V2 Double Any
 plotOrb o = p (occupancy o, spin o)
   where
     p (Occupied, Nothing)    = addEnergy alphaBeta
-    p (Empty, Nothing)       = addEnergy emptyLevel
+    p (EmptyOrb, Nothing)    = addEnergy emptyLevel
     p (Occupied, Just Alpha) = addEnergy alpha # translate (r2 (-alphaBetaSpacing, 0.0))
-    p (Empty, Just Alpha)    = addEnergy emptyLevel # translate (r2 (-alphaBetaSpacing, 0.0))
+    p (EmptyOrb, Just Alpha) = addEnergy emptyLevel # translate (r2 (-alphaBetaSpacing, 0.0))
     p (Occupied, Just Beta)  = addEnergy beta  # translate (r2 (alphaBetaSpacing, 0.0)) 
-    p (Empty, Just Beta)     = addEnergy emptyLevel # translate (r2 (alphaBetaSpacing, 0.0)) 
+    p (EmptyOrb, Just Beta)  = addEnergy emptyLevel # translate (r2 (alphaBetaSpacing, 0.0)) 
 
-    addEnergy :: (Backend b R2, Renderable (Path R2) b, Renderable Text b) => Diagram b R2 -> Diagram b R2
+    addEnergy :: Renderable (Text Double) b => QDiagram b V2 Double Any -> QDiagram b V2 Double Any
     addEnergy d = d <> t
       where
         xshiftpos = 0.9
         yshiftpos = (-0.05)
         e = energy o
-        t' = (text (printf "%0.2f eV" e) # fontSize (Local 0.15)) `atop` strutX xshiftpos
+        t' = (text (printf "%0.2f eV" e) # fontSize (local 0.15)) `atop` strutX xshiftpos
         t = case spin o of
               Just Alpha -> t' # translate (r2 (-xshiftpos, yshiftpos)) 
               _          -> t' # translate (r2 (xshiftpos, yshiftpos))
 
-plotOrbs :: (Backend b R2, Renderable (Path R2) b, Renderable Text b) => [Orbital] -> Diagram b R2
+-- plotOrbs :: (Backend b V2, Renderable (Path (V2 Double)) b, Renderable Text b) => [Orbital] -> Diagram b (V2 Double)
+plotOrbs :: (Renderable (Path V2 Double) b, Renderable (Text Double) b) => [Orbital] -> QDiagram b V2 Double Any
 plotOrbs os = foldl1 atop ds
   where
     c = length os

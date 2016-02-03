@@ -41,7 +41,7 @@ getOccupancy = decide . findEng . lines
       where
         vs = splitWs s
         [_, occs,_,evs] = vs 
-        occ = if round (read occs :: Float) > 0 then Occupied else Empty 
+        occ = if round (read occs :: Float) > 0 then Occupied else EmptyOrb
         evF = read evs :: Double
         orbital = Orbital evF occ spin
 
@@ -54,6 +54,6 @@ takeOrbs :: Int -> Int -> [Orbital] -> [Orbital]
 takeOrbs homom cnt orbs = take cnt $ drop (occ - homom) orbs
   where
     occ = length $ takeWhile pred orbs
-    pred (Orbital _ Empty _) = False
-    pred _                   = True
+    pred (Orbital _ EmptyOrb _) = False
+    pred _                      = True
 
