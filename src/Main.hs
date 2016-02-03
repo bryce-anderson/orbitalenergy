@@ -31,7 +31,7 @@ data OptFlags = OptFlags { first  :: Int
                          , files  :: [String]
                          , parser :: Parser }
                          
-usage = "\nusage: orbitalenergy (gaussian|orca) (HOMO-N to start at) total [filenames]"
+usage = "\nusage: orbitalenergy (gaussian|orca) (HOMO-N to start at) (total to plot) [filenames]"
 
 parseArgs :: IO OptFlags 
 parseArgs = do
@@ -41,13 +41,11 @@ parseArgs = do
                ("orca":args)     -> (OP.loadEnergies,args)
                _                 -> error $ "Invalid args: " ++ show args' ++ usage
   
-      go ("first":f:xs) Nothing t = go xs (Just $ read f) t
-      go ("total":t:xs) f Nothing = go xs f (Just $ read t)
-      go xs (Just f) (Just t) = return $ OptFlags f t xs prog
-      go _ _ _ = error $ "Failed to parse flags: " ++ show args ++ usage
+      go (f:t:xs) = OptFlags (read f) (read t) xs prog
+      go _ = error $ "Failed to parse flags: " ++ show args ++ usage
   
   
-  go args Nothing Nothing
+  return $ go args
     
   
 
