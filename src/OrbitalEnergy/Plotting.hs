@@ -3,7 +3,7 @@
 {-# LANGUAGE UndecidableInstances       #-}
 {-# LANGUAGE NoMonomorphismRestriction  #-}
 
-module OrcaEnergy.Plotting (
+module OrbitalEnergy.Plotting (
     alpha,
     beta,
     alphaBeta,

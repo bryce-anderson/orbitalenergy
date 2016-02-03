@@ -1,10 +1,8 @@
-module OrcaEnergy.Parsing (
-    getOccupancy,
-    loadEnergies,
-    takeOrbs
+module OrbitalEnergy.OrcaParsing (
+    loadEnergies
 ) where 
 
-import OrcaEnergy
+import OrbitalEnergy
 import System.FilePath
 import Debug.Trace
 import Data.String.Utils (splitWs, strip)
@@ -49,11 +47,4 @@ loadEnergies :: FilePath -> IO [Orbital]
 loadEnergies p = do
   s <- readFile p
   return $ getOccupancy s 
-
-takeOrbs :: Int -> Int -> [Orbital] -> [Orbital]
-takeOrbs homom cnt orbs = take cnt $ drop (occ - homom) orbs
-  where
-    occ = length $ takeWhile pred orbs
-    pred (Orbital _ EmptyOrb _) = False
-    pred _                      = True
 

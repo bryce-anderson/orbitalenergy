@@ -1,10 +1,10 @@
 {-# LANGUAGE TemplateHaskell            #-}
 {-# LANGUAGE FlexibleContexts           #-}
 
-import OrcaEnergy.OrcaParsing as OP
-import qualified OrcaEnergy.GaussianParsing as GP
-import OrcaEnergy.Plotting
-import OrcaEnergy
+import OrbitalEnergy.OrcaParsing as OP
+import qualified OrbitalEnergy.GaussianParsing as GP
+import OrbitalEnergy.Plotting
+import OrbitalEnergy
 
 import Diagrams.Prelude
 import Diagrams.Backend.SVG
@@ -26,28 +26,28 @@ defineFlag "t:total"  (8 :: Int)      "Number of orbitals to plot"
 
 type Parser = FilePath -> IO [Orbital]
 
-data OptFlags = OptFlags { height :: Double
-                         , first  :: Int
+data OptFlags = OptFlags { first  :: Int
                          , total  :: Int
                          , files  :: [String]
                          , parser :: Parser }
-    
+                         
+usage = "\nusage: orbitalenergy (gaussian|orca) (HOMO-N to start at) total [filenames]"
+
 parseArgs :: IO OptFlags 
 parseArgs = do
-  (program:args) <- getArgs
-  let prog = case program of 
-               "gaussian" -> GP.loadEnergies
-               "orca"     -> OP.loadEnergies
-               _          -> error $ "Invalid file format: " ++ program
+  args' <- getArgs
+  let (prog,args) = case args' of 
+               ("gaussian":args) -> (GP.loadEnergies,args)
+               ("orca":args)     -> (OP.loadEnergies,args)
+               _                 -> error $ "Invalid args: " ++ show args' ++ usage
   
-      go ("height":h:xs) Nothing f t = go xs (Just $ read h) f t
-      go ("first":f:xs) h Nothing t = go xs h (Just $ read f) t
-      go ("total":t:xs) h f Nothing = go xs h f (Just $ read t)
-      go xs (Just h) (Just f) (Just t) = return $ OptFlags h f t xs prog
-      go _ _ _ _ = error $ "Failed to parse flags: " ++ show args
+      go ("first":f:xs) Nothing t = go xs (Just $ read f) t
+      go ("total":t:xs) f Nothing = go xs f (Just $ read t)
+      go xs (Just f) (Just t) = return $ OptFlags f t xs prog
+      go _ _ _ = error $ "Failed to parse flags: " ++ show args ++ usage
   
   
-  go args Nothing Nothing Nothing
+  go args Nothing Nothing
     
   
 
@@ -67,11 +67,11 @@ findFiles =  filter (endswith ".out") `fmap` getDirectoryContents "."
 outFile = "energylevels.svg"
 
 runPlots :: OptFlags -> IO ()
-runPlots (OptFlags h f t fnames parser) = do
+runPlots (OptFlags f t fnames parser) = do
   orbs <- (\fp -> loadOrbs f t fp <$> parser fp) `mapM` fnames
   let maxWidth = (maximum $ width `map` orbs) :: Double
       total = foldl (\acc d -> acc ||| (d `atop` strutX maxWidth)) mempty orbs
-      sz = mkHeight h
+      sz = mkHeight 1024 -- just hardcode a default value: its SVG anyway
       
   putStrLn $ "Rendering to SVG " ++ show outFile
   renderSVG outFile sz total

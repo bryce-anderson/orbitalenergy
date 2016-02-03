@@ -1,8 +1,8 @@
-module OrcaEnergy.GaussianParsing (
+module OrbitalEnergy.GaussianParsing (
     loadEnergies
 ) where 
 
-import OrcaEnergy
+import OrbitalEnergy
 import System.FilePath
 import Debug.Trace
 import Data.String.Utils (splitWs, strip)

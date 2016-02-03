@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-module OrcaEnergy (
+module OrbitalEnergy (
     Spin(..),
     OrbOcc(..),
     Orbital(..),
@@ -16,7 +16,7 @@ import Diagrams.TwoD.Types (V2)
 import Diagrams.Path (Path)
 import Diagrams.Prelude
 
-import OrcaEnergy.Plotting
+import OrbitalEnergy.Plotting
 import qualified Debug.Trace
 
 data Spin = Alpha
