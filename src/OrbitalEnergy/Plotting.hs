@@ -24,11 +24,13 @@ alphaBeta :: Renderable (Path V2 Double) b => QDiagram b V2 Double Any
 alphaBeta = eLevel
 
 emptyLevel :: Renderable (Path V2 Double) b => QDiagram b V2 Double Any
-emptyLevel = dashed
+emptyLevel = redLevel -- dashed
 
 -- private helpers
 
 dashed = eLevel # dashingG [0.02,0.02] 0
+
+redLevel = eLevel # lc red
 
 eLevel :: Renderable (Path V2 Double) b => QDiagram b V2 Double Any
 eLevel = (strokeLine eLine) # lw thin # translate (r2 (-0.5,0.0))
