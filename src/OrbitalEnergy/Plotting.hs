@@ -14,9 +14,6 @@ import Diagrams.Coordinates
 import Diagrams.Prelude
 import Diagrams.Util
 
-
-dashed = eLevel # dashingG [0.02,0.02] 0
-
 alpha :: Renderable (Path V2 Double) b => QDiagram b V2 Double Any
 alpha = eLevel -- <> eArrow # lc red
 
@@ -24,13 +21,14 @@ beta :: Renderable (Path V2 Double) b => QDiagram b V2 Double Any
 beta = eLevel -- <> eArrow # rotate (1/2 @@ turn) # lc blue
 
 alphaBeta :: Renderable (Path V2 Double) b => QDiagram b V2 Double Any
-alphaBeta = eLevel -- <> a # lc red <> b # lc blue
-  where
-    a = eArrow # translate (r2 (-0.1,0))
-    b = a # rotate (1/2 @@ turn)
+alphaBeta = eLevel
 
 emptyLevel :: Renderable (Path V2 Double) b => QDiagram b V2 Double Any
-emptyLevel = dashed -- eLevel
+emptyLevel = dashed
+
+-- private helpers
+
+dashed = eLevel # dashingG [0.02,0.02] 0
 
 eLevel :: Renderable (Path V2 Double) b => QDiagram b V2 Double Any
 eLevel = (strokeLine eLine) # lw thin # translate (r2 (-0.5,0.0))
