@@ -31,7 +31,7 @@ data OptFlags = OptFlags { first  :: Int
                          , files  :: [String]
                          , parser :: Parser }
                          
-usage = "\nusage: orbitalenergy (gaussian|orca) (HOMO-N to start at) (total to plot) [filenames]"
+usage = "\nusage: orbitalenergy (gaussian|orca) (LUMO-N to start at) (total to plot) [filenames]"
 
 parseArgs :: IO OptFlags 
 parseArgs = do
